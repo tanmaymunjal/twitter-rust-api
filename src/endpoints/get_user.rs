@@ -1,19 +1,27 @@
 use crate::models::user::User;
-use crate::postgres_connect;
 use crate::schema::users::{dsl::users, user_email};
-use axum::{extract::{Path,State}, response::Json};
+use crate::{AppState, Arc};
+use axum::{
+    extract::{Path, State},
+    response::Json,
+};
 use diesel::prelude::*;
 use serde_json::{json, Value};
 
 pub async fn get_user(
     Path(user_query_email): Path<String>,
+    State(state): State<Arc<AppState>>,
 ) -> Json<Value> {
-    let connection = &mut postgres_connect::establish_connection();
     let result = users
         .filter(user_email.eq(&user_query_email))
         .limit(1)
         .select(User::as_select())
-        .load(connection)
+        .load(
+            &mut state
+                .db_pool
+                .get()
+                .expect("Failed to access db pool worker"),
+        )
         .expect("Error finding user");
     let user = result.into_iter().nth(0).expect("No user found");
     Json(json!({
