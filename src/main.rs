@@ -1,8 +1,12 @@
-use axum::{routing::get, Router};
+use axum::{
+    routing::{get, post},
+    Router,
+};
 pub mod endpoints;
 pub mod models;
 mod postgres_connect;
 pub mod schema;
+pub mod utils;
 use std::sync::Arc;
 
 pub struct AppState {
@@ -20,6 +24,7 @@ async fn main() {
 
     let app = Router::new()
         .route("/user/:user_email", get(endpoints::get_user::get_user))
+        .route("/user", post(endpoints::create_user::create_user))
         .with_state(state);
 
     // run our app with hyper, listening globally on port 3000

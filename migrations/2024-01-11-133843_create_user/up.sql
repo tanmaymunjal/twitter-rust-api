@@ -1,6 +1,7 @@
 -- Your SQL goes here
 CREATE TABLE users (
     user_email VARCHAR(320) PRIMARY KEY,
+    user_hashed_password CHAR(64) NOT NULL,
     user_name VARCHAR(100) NOT NULL,
     user_profile_pic bytea,
     user_twitter_banner bytea,
