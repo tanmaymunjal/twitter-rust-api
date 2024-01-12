@@ -25,6 +25,7 @@ async fn main() {
     let app = Router::new()
         .route("/user/:user_email", get(endpoints::get_user::get_user))
         .route("/user", post(endpoints::create_user::create_user))
+        .route("/post", post(endpoints::create_post::create_post))
         .with_state(state);
 
     // run our app with hyper, listening globally on port 3000

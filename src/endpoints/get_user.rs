@@ -23,7 +23,7 @@ pub async fn get_user(
                 .expect("Failed to access db pool worker"),
         )
         .expect("Error finding user");
-    let user = result.into_iter().nth(0).expect("No user found");
+    let user = result.into_iter().next().expect("No user found");
     Json(json!({
        "user_email": user.user_email,
        "user_name":user.user_name,

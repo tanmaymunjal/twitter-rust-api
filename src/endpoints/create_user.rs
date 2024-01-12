@@ -6,7 +6,7 @@ use axum::{
     extract::{Json, State},
     response,
 };
-use chrono::NaiveDateTime;
+use chrono::Utc;
 use diesel::RunQueryDsl;
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -18,8 +18,6 @@ pub struct CreateUserPayload {
     pub user_name: String,
     pub user_profile_pic: Option<Vec<u8>>,
     pub user_twitter_banner: Option<Vec<u8>>,
-    pub created_at: NaiveDateTime,
-    pub updated_at: Option<NaiveDateTime>,
 }
 
 pub async fn create_user(
@@ -30,12 +28,12 @@ pub async fn create_user(
 
     let new_user = NewUser {
         user_email: &create_user.user_email,
-        user_hashed_password: user_hashed_password,
+        user_hashed_password,
         user_name: &create_user.user_name,
         user_profile_pic: create_user.user_profile_pic,
         user_twitter_banner: create_user.user_twitter_banner,
-        created_at: create_user.created_at,
-        updated_at: create_user.updated_at
+        created_at: Utc::now().naive_utc(),
+        updated_at: None,
     };
 
     diesel::insert_into(users)

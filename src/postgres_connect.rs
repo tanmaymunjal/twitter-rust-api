@@ -17,5 +17,5 @@ pub fn establish_connection() -> DbPool {
         .max_size(3)
         .build(manager)
         .expect("Failed to create connection pool");
-    return pool;
+    pool
 }
